@@ -3,6 +3,7 @@ package endpoint
 import (
 	"context"
 	"fmt"
+	"github.com/rancher/kine/pkg/drivers/mssql"
 	"net"
 	"os"
 	"strings"
@@ -25,6 +26,7 @@ const (
 	ETCDBackend     = "etcd3"
 	MySQLBackend    = "mysql"
 	PostgresBackend = "postgres"
+	MssqlBackend    = "sqlserver"
 )
 
 type Config struct {
@@ -131,6 +133,8 @@ func getKineStorageBackend(ctx context.Context, driver, dsn string, cfg Config) 
 		backend, err = pgsql.New(ctx, dsn, cfg.Config)
 	case MySQLBackend:
 		backend, err = mysql.New(ctx, dsn, cfg.Config)
+	case MssqlBackend:
+		backend, err = mssql.New(ctx, dsn, cfg.Config)
 	default:
 		return false, nil, fmt.Errorf("storage backend is not defined")
 	}
